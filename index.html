@@ -383,7 +383,7 @@
         <div class="detail-title-jp" id="dTitleJp"></div>
         <div class="detail-title-en" id="dTitleEn"></div>
         <div class="detail-score-row">
-          <span style="color:var(--accent2);font-size:15px;">&#9733;</span>
+          <span style="color:#f0d060;font-size:15px;">&#9733;</span>
           <span id="dScore"></span>
           <span style="font-size:12px;color:var(--text3);font-weight:600;">/10</span>
         </div>
@@ -2243,7 +2243,7 @@ function getFiltered() {
 function renderList() {
   const list = getFiltered();
   const container = document.getElementById('animeContainer');
-  document.getElementById('countLabel').textContent = list.length + ' anime';
+  document.getElementById('countLabel').textContent = list.length + ' Anime';
   if (list.length === 0) {
     container.innerHTML = `<div class="empty-state"><div class="emo">📭</div><p>Belum ada anime di sini</p><span>Tambahkan anime lewat aplikasi manager</span></div>`;
     return;
@@ -2256,7 +2256,7 @@ function renderList() {
 }
 
 function scoreColor(s) {
-  return s >= 8 ? '#39d0b4' : s >= 6 ? '#f0d060' : '#f85149';
+  return '#79c0ff';
 }
 
 function fmtGenre(g) {
@@ -2275,7 +2275,7 @@ function cardHTML(a) {
     <div class="card-poster ${a.cover ? '' : (a.color||'pc-1')}">
       ${posterContent}
       ${a.eps ? `<span class="card-ep">${a.eps} Eps</span>` : ''}
-      <span class="card-score" style="color:${sc}"><span style="font-size:9px;">&#9733;</span>${fmtScore(a.score)}<small style="font-size:9px;color:#8b949e;margin-left:1px;">/10</small></span>
+      <span class="card-score"><span style="font-size:9px;color:#f0d060;">&#9733;</span><span style="color:${sc}">${fmtScore(a.score)}</span><small style="font-size:9px;color:#8b949e;margin-left:1px;">/10</small></span>
     </div>
     <div class="card-info">
       <div class="card-title" onclick="copyTitle(event,'${escAttr(displayTitle)}')" title="Klik untuk copy judul">${escHtml(displayTitle)}</div>
@@ -2301,8 +2301,8 @@ function listItemHTML(a) {
       <div class="list-genre">${escHtml(fmtGenre(a.genre))}</div>
       ${metaTags.length ? `<div class="list-meta-row">${metaTags.join('')}</div>` : ''}
     </div>
-    <div class="list-score-wrap" style="color:${sc}">
-      <span style="font-size:12px;">&#9733;</span>${fmtScore(a.score)}<small style="font-size:11px;color:var(--text3);font-weight:600;">/10</small>
+    <div class="list-score-wrap">
+      <span style="font-size:12px;color:#f0d060;">&#9733;</span><span style="color:${sc}">${fmtScore(a.score)}</span><small style="font-size:11px;color:var(--text3);font-weight:600;">/10</small>
     </div>
   </div>`;
 }
