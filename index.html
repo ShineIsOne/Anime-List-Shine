@@ -324,6 +324,23 @@
     .detail-chips { padding: 0.75rem 1.25rem 0; }
     .detail-grid { margin: 0.75rem 1.25rem 0; }
   }
+
+  /* === SORT DROPDOWN === */
+  .sort-select {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 10px 6px 10px;
+    color: var(--text2); font-family: 'Sora', sans-serif;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    outline: none; transition: border-color 0.18s;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 26px;
+  }
+  .sort-select:focus { border-color: var(--accent); }
+  .sort-select option { background: var(--bg2); color: var(--text); }
+
 </style>
 </head>
 <body>
@@ -355,6 +372,12 @@
         <svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor"><rect x="1" y="2" width="13" height="1.5" rx="0.75"/><rect x="1" y="6.75" width="13" height="1.5" rx="0.75"/><rect x="1" y="11.5" width="13" height="1.5" rx="0.75"/></svg>
       </button>
     </div>
+    <select class="sort-select" id="sortSelect" onchange="renderList()" title="Urutkan">
+      <option value="rating-desc">&#9733; Rating Tertinggi</option>
+      <option value="rating-asc">&#9733; Rating Terendah</option>
+      <option value="name-asc">A &rarr; Z</option>
+      <option value="name-desc">Z &rarr; A</option>
+    </select>
   </div>
 </div>
 
@@ -2204,6 +2227,7 @@ let animeList = ANIME_DATA;
 let currentTab = 'all';
 let currentView = 'card';
 let synopsisExpanded = false;
+let currentSort = 'rating-desc';
 
 const ICO_EPS = `<svg class="ico" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 5L6.5 6.25L4.5 7.5V5Z" fill="currentColor"/></svg>`;
 const ICO_YEAR = `<svg class="ico" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2.5" width="9" height="8" rx="1.2" stroke="currentColor" stroke-width="1.2"/><path d="M4 1.5V3.5M8 1.5V3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1.5 5.5H10.5" stroke="currentColor" stroke-width="1.2"/></svg>`;
@@ -2240,8 +2264,25 @@ function getFiltered() {
   });
 }
 
+
+function getSorted(list) {
+  const sel = document.getElementById('sortSelect');
+  const mode = sel ? sel.value : 'rating-desc';
+  const arr = list.slice();
+  if (mode === 'rating-desc') {
+    arr.sort((a, b) => (parseFloat(b.score) || 0) - (parseFloat(a.score) || 0));
+  } else if (mode === 'rating-asc') {
+    arr.sort((a, b) => (parseFloat(a.score) || 0) - (parseFloat(b.score) || 0));
+  } else if (mode === 'name-asc') {
+    arr.sort((a, b) => (a.titleJp || a.titleEn || '').localeCompare(b.titleJp || b.titleEn || ''));
+  } else if (mode === 'name-desc') {
+    arr.sort((a, b) => (b.titleJp || b.titleEn || '').localeCompare(a.titleJp || a.titleEn || ''));
+  }
+  return arr;
+}
+
 function renderList() {
-  const list = getFiltered();
+  const list = getSorted(getFiltered());
   const container = document.getElementById('animeContainer');
   document.getElementById('countLabel').textContent = list.length + ' Anime';
   if (list.length === 0) {
