@@ -325,6 +325,142 @@
     .detail-grid { margin: 0.75rem 1.25rem 0; }
   }
 
+  /* === LOADING SCREEN === */
+  #loadingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: opacity 0.55s cubic-bezier(.4,0,.2,1), visibility 0.55s;
+  }
+  #loadingScreen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .ls-logo {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: lsFadeUp 0.5s 0.1s ease forwards;
+  }
+  .ls-logo span { color: var(--accent); }
+  .ls-logo .shine { color: #79c0ff; }
+
+  .ls-tagline {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 44px;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: lsFadeUp 0.5s 0.22s ease forwards;
+  }
+
+  .ls-poster-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: lsFadeUp 0.55s 0.35s ease forwards;
+  }
+
+  .ls-poster {
+    width: 64px;
+    height: 85px;
+    border-radius: 10px;
+    border: 1px solid var(--border2);
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    background: var(--bg2);
+  }
+
+  @media (max-width: 600px) {
+    .ls-poster { width: 54px; height: 72px; border-radius: 8px; }
+    .ls-poster-row { gap: 10px; }
+  }
+
+  .ls-poster img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .ls-poster img.loaded { opacity: 1; }
+  .ls-poster-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      var(--bg2) 35%,
+      var(--bg3) 50%,
+      var(--bg2) 65%
+    );
+    background-size: 200% 100%;
+    animation: lsShimmer 1.4s infinite linear;
+    border-radius: inherit;
+    transition: opacity 0.3s;
+  }
+  .ls-poster-shimmer.done { opacity: 0; pointer-events: none; }
+
+  @keyframes lsShimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .ls-bar-wrap {
+    width: 220px;
+    height: 3px;
+    background: var(--bg3);
+    border-radius: 99px;
+    overflow: hidden;
+    opacity: 0;
+    animation: lsFadeUp 0.4s 0.5s ease forwards;
+  }
+  @media (max-width: 600px) {
+    .ls-bar-wrap { width: 170px; }
+  }
+  .ls-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.22s ease;
+    box-shadow: 0 0 8px rgba(227,195,67,0.45);
+  }
+
+  .ls-status {
+    margin-top: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.4px;
+    opacity: 0;
+    animation: lsFadeUp 0.4s 0.55s ease forwards;
+    min-height: 16px;
+  }
+
+  .ls-dots {
+    display: inline-block;
+  }
+
+  @keyframes lsFadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   /* === SORT DROPDOWN === */
   .sort-select {
     background: var(--bg3); border: 1px solid var(--border);
@@ -344,6 +480,19 @@
 </style>
 </head>
 <body>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen">
+  <div class="ls-logo">Anime <span>List |</span> <span class="shine">Shine</span></div>
+  <div class="ls-tagline">Memuat koleksi poster</div>
+  <div class="ls-poster-row" id="lsPosterRow">
+    <!-- Poster previews will be injected here -->
+  </div>
+  <div class="ls-bar-wrap">
+    <div class="ls-bar" id="lsBar"></div>
+  </div>
+  <div class="ls-status" id="lsStatus">Memuat<span class="ls-dots" id="lsDots"></span></div>
+</div>
 
 <div class="sticky-nav">
   <div class="header">
@@ -3638,6 +3787,83 @@ document.getElementById('detailOverlay').addEventListener('click', function(e) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeDetail();
 });
+
+// ============================================================
+// LOADING SCREEN
+// ============================================================
+(function() {
+  const covers = animeList
+    .filter(a => a.cover)
+    .slice(0, 5)
+    .map(a => a.cover);
+
+  const posterRow = document.getElementById('lsPosterRow');
+  const lsBar = document.getElementById('lsBar');
+  const lsStatus = document.getElementById('lsStatus');
+
+  // Animated dots
+  const dotsEl = document.getElementById('lsDots');
+  let dotCount = 0;
+  const dotTimer = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    dotsEl.textContent = '.'.repeat(dotCount);
+  }, 380);
+
+  // Create preview poster slots
+  const imgEls = covers.map((src, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ls-poster';
+
+    const shimmer = document.createElement('div');
+    shimmer.className = 'ls-poster-shimmer';
+
+    const img = document.createElement('img');
+    img.alt = '';
+
+    wrap.appendChild(shimmer);
+    wrap.appendChild(img);
+    posterRow.appendChild(wrap);
+    return { img, shimmer };
+  });
+
+  let loaded = 0;
+  const total = imgEls.length || 1;
+
+  function onImgLoad(imgEl, shimmer) {
+    imgEl.classList.add('loaded');
+    shimmer.classList.add('done');
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    lsBar.style.width = pct + '%';
+    lsStatus.textContent = 'Memuat poster ' + loaded + ' / ' + total;
+    if (loaded >= total) {
+      finishLoading();
+    }
+  }
+
+  function finishLoading() {
+    clearInterval(dotTimer);
+    lsBar.style.width = '100%';
+    lsStatus.textContent = 'Siap!';
+    setTimeout(() => {
+      document.getElementById('loadingScreen').classList.add('hidden');
+    }, 500);
+  }
+
+  if (imgEls.length === 0) {
+    setTimeout(finishLoading, 600);
+  } else {
+    imgEls.forEach(({ img, shimmer }, i) => {
+      setTimeout(() => {
+        img.onload = () => onImgLoad(img, shimmer);
+        img.onerror = () => onImgLoad(img, shimmer);
+        img.src = covers[i];
+      }, i * 80);
+    });
+    // Safety timeout: max 7s wait
+    setTimeout(finishLoading, 7000);
+  }
+})();
 
 renderList();
 </script>
