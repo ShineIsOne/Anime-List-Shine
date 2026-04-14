@@ -1,5 +1,46 @@
 [
   {
+    "id": "id_1776175329144",
+    "mal_id": 61359,
+    "titleJp": "Osananajimi to wa Love Comedy ni Naranai",
+    "titleEn": "You Can't Be In a Rom-Com with Your Childhood Friends!",
+    "genre": [
+      "Comedy",
+      "Romance"
+    ],
+    "studio": "Tezuka Productions",
+    "year": 2026,
+    "eps": 12,
+    "score": 7.0,
+    "synopsis": "Sebagai penggemar komedi romantis, Yonosuke \"Eiyuu\" Sakai paling menikmati cerita tentang teman masa kecil. Tetapi dia dengan sungguh - sungguh percaya bahwa teman - teman masa kecil yang sempurna dan penuh kasih dari kisah - kisahnya hanya ada dalam fiksi. Meskipun ia memiliki dua teman masa kecilnya sendiri - Shio Minamo dan Akari Hiodoshi - Eiyuu belum pernah melihat salah satu dari mereka sebagai sesuatu yang lebih.\n\nNamun, sekarang mereka semua berada di sekolah menengah bersama, keindahan kedua gadis itu mulai menarik perhatian Eiyuu. Seiring minatnya tumbuh secara halus,",
+    "cover": "https://myanimelist.net/images/anime/1729/153502l.jpg",
+    "mal": "https://myanimelist.net/anime/61359/Osananajimi_to_wa_Love_Comedy_ni_Naranai",
+    "emoji": "🎬",
+    "addedAt": 1776175329144,
+    "inRomance": true
+  },
+  {
+    "id": "id_1775727703548",
+    "mal_id": 52701,
+    "titleJp": "Dungeon Meshi",
+    "titleEn": "Delicious in Dungeon",
+    "genre": [
+      "Adventure",
+      "Comedy",
+      "Fantasy"
+    ],
+    "studio": "Trigger",
+    "year": 2024,
+    "eps": 24,
+    "score": 8.7,
+    "synopsis": "Petualangan ksatria Laios Touden memimpin pesta kecil melalui ruang bawah tanah yang tampaknya tak berujung, labirin bawah tanah yang penuh dengan monster berbahaya dan perangkap genting. Melalui penggunaan sihir tingkat lanjut, seorang penjelajah kadang - kadang dapat dibangkitkan, memungkinkan mereka untuk belajar dari kesalahan masa lalu dan mencoba melintasi dungeon lagi. Namun, ketika naga yang kuat memakan Falin, saudara perempuan Laios yang memukau, dia mengirim saudara laki - lakinya dan teman - temannya kembali ke awal untuk menyelamatkan mereka dari akhir yang permanen.\n\nPadahal st",
+    "cover": "https://myanimelist.net/images/anime/1711/142478l.jpg",
+    "mal": "https://myanimelist.net/anime/52701/Dungeon_Meshi",
+    "emoji": "🎬",
+    "addedAt": 1775727703548,
+    "inRomance": false
+  },
+  {
     "id": "id_1775528084270",
     "mal_id": 61782,
     "titleJp": "Kirei ni Shitemoraemasu ka.",
@@ -75,7 +116,8 @@
     "genre": [
       "Comedy",
       "Romance",
-      "School"
+      "School",
+      "Slice of Life"
     ],
     "studio": "Lapin Track",
     "year": 2026,
