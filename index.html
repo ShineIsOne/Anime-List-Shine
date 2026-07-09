@@ -522,6 +522,7 @@
       </button>
     </div>
     <select class="sort-select" id="sortSelect" onchange="renderList()" title="Urutkan">
+      <option value="newest">Baru Ditambahkan</option>
       <option value="rating-desc">&#9733; Rating Tertinggi</option>
       <option value="rating-asc">&#9733; Rating Terendah</option>
       <option value="name-asc">A &rarr; Z</option>
@@ -3892,7 +3893,7 @@ let animeList = ANIME_DATA;
 let currentTab = 'all';
 let currentView = 'card';
 let synopsisExpanded = false;
-let currentSort = 'rating-desc';
+let currentSort = 'newest';
 
 const ICO_EPS = `<svg class="ico" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 5L6.5 6.25L4.5 7.5V5Z" fill="currentColor"/></svg>`;
 const ICO_YEAR = `<svg class="ico" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2.5" width="9" height="8" rx="1.2" stroke="currentColor" stroke-width="1.2"/><path d="M4 1.5V3.5M8 1.5V3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1.5 5.5H10.5" stroke="currentColor" stroke-width="1.2"/></svg>`;
@@ -3932,9 +3933,11 @@ function getFiltered() {
 
 function getSorted(list) {
   const sel = document.getElementById('sortSelect');
-  const mode = sel ? sel.value : 'rating-desc';
+  const mode = sel ? sel.value : 'newest';
   const arr = list.slice();
-  if (mode === 'rating-desc') {
+  if (mode === 'newest') {
+    arr.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+  } else if (mode === 'rating-desc') {
     arr.sort((a, b) => (parseFloat(b.score) || 0) - (parseFloat(a.score) || 0));
   } else if (mode === 'rating-asc') {
     arr.sort((a, b) => (parseFloat(a.score) || 0) - (parseFloat(b.score) || 0));
