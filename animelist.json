@@ -175,6 +175,7 @@
     "titleEn": "Grand Blue Dreaming Season 3",
     "genre": [
       "Comedy",
+      "Romance",
       "Slice of Life",
       "Sports"
     ],
@@ -187,7 +188,7 @@
     "mal": "https://myanimelist.net/anime/62542",
     "emoji": "🎬",
     "addedAt": 1790256223980,
-    "inRomance": false
+    "inRomance": true
   },
   {
     "id": "id_1784345686350",
